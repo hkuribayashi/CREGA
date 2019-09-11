@@ -29,11 +29,5 @@ public enum Param {
 	
 	initialGeneRange, finalGeneRange,
 	
-	populationSize, generationSize, kElitism,
-	
-	
-	/* PSO Parameters */
-	
-	psoSteps, swarmSizeOptions;
-	
+	populationSize, generationSize, kElitism;
 }

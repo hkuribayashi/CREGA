@@ -1,12 +1,8 @@
 package br.unifesspa.cre.core;
 
-import java.util.List;
-
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.config.Param;
-import br.unifesspa.cre.data.DAO;
-import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.util.Util;
+import br.unifesspa.cre.hetnet.Scenario;
 
 public class Main {
 
@@ -46,47 +42,26 @@ public class Main {
 		env.set(Param.finalMutationProbability, 0.9);
 		env.set(Param.populationSize, (env.getLambdaSmall() * env.getArea()));
 		env.set(Param.generationSize, 100);
-		env.set(Param.kElitism, 1);
+		env.set(Param.kElitism, 2);
 		env.set(Param.initialGeneRange, -10.0);
 		env.set(Param.finalGeneRange, 80.0);
 
-		//Setting PSO Parameters
-		env.set(Param.psoSteps, 100);
-
 		//Experiment 01
 
-		System.out.println("Experiment 01:");
-
-		DAO<List<Result>> daoE1 = new DAO<List<Result>>();
-		String fileE1 = path + "experiment1.data";
-		List<Result> re1;
-		if (!daoE1.verifyPath(fileE1)) {
-			re1 = Experiments.getExperiment01(env, env.getSimulations());
-			daoE1.save(re1, fileE1);
-		}else re1 = daoE1.restore(fileE1);
-
-		Util.print(re1);
-
+		System.out.println("Experiment 01: No Bias");
+		System.out.println();
+		
 		//Experiment 02
 
-		System.out.println("Experiment 02:");
+		System.out.println("Experiment 02: Unified Bias");
+		System.out.println();
+		
+		//Experiment 03
 
-		DAO<List<List<Result>>> daoE2 = new DAO<List<List<Result>>>();
-		String fileE2 = path + "experiment2.data";
-		List<List<Result>> re2;
-		if (!daoE1.verifyPath(fileE2)) {
-			re2 = Experiments.getExperiment02(env, env.getSimulations());
-			daoE2.save(re2, fileE2);
+		System.out.println("Experiment 03: GA Bias ");
 
-			for (List<Result> list : re2) {
-				double alpha = list.get(0).getAlpha();
-				double beta = list.get(0).getBeta();
-
-				Double[] boxplotValues = Util.getBoxPlotData(list);
-				String file = env.getWorkingDirectory() + "e2-alpha-"+alpha+"-beta-"+beta+".csv";
-				Util.writeToCSV(file, boxplotValues, "");
-			}
-
-		}else re2 = daoE2.restore(fileE2);
+		Scenario scenario = new Scenario(env);
+		Engine e = new Engine(scenario);
+		System.out.println( e.getGA() );
 	}
 }

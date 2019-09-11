@@ -230,8 +230,6 @@ public class Util {
 	public static Result getMean(List<Result> results) {
 
 		Result result = new Result();
-		result.setAlpha(results.get(0).getAlpha());
-		result.setBeta(results.get(0).getBeta());
 		result.setScenario(results.get(0).getScenario());
 
 		List<Double> biasValues = new ArrayList<Double>();

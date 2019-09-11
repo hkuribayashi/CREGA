@@ -1,6 +1,7 @@
 package br.unifesspa.cre.core;
 
 import br.unifesspa.cre.config.CREEnv;
+import br.unifesspa.cre.ga.GA;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
 
@@ -11,26 +12,18 @@ import br.unifesspa.cre.model.Result;
  */
 public class Engine{
 
-	protected double alpha;
-
-	protected double beta;
-
 	private Double[] biasOffset;
 
 	protected CREEnv env;
 
 	protected Scenario scenario;
 
-	public Engine(double alpha, double beta, CREEnv env) {
-		this.alpha = alpha;
-		this.beta = beta;
+	public Engine(CREEnv env) {
 		this.env = env;
 		this.scenario = new Scenario(env);
 	}
 
-	public Engine(double alpha, double beta, Scenario scenario) {
-		this.alpha = alpha;
-		this.beta = beta;
+	public Engine(Scenario scenario) {
 		this.scenario = scenario;
 		this.env = this.scenario.getEnv();
 	}
@@ -43,20 +36,18 @@ public class Engine{
 
 		this.scenario.setBias(this.biasOffset);
 		this.scenario.evaluation();
-		
+
 		Result r = new Result();
-		
+
 		r.setBias(0.0);
-		r.setAlpha(this.alpha);
-		r.setBeta(this.beta);
 		r.setSumRate(this.scenario.getSumRate());
 		r.setMedianRate(this.scenario.getMedianRate());
 		r.setRequiredRate(this.scenario.getRequiredRate());
 		r.setUesServed(this.scenario.getUesServed());
 		r.setServingBSs( this.scenario.getServingBSs() );
-		r.setEvaluation( this.alpha * r.getUesServed() + this.beta * r.getServingBSs() );
+		r.setEvaluation( r.getUesServed() + r.getServingBSs() );
 		r.setScenario(this.scenario);
-		
+
 		return r;
 	}
 
@@ -68,62 +59,25 @@ public class Engine{
 
 		this.scenario.setBias(this.biasOffset);
 		this.scenario.evaluation();
-		
+
 		Result r = new Result();
-		
+
 		r.setBias(bias);
-		r.setAlpha(this.alpha);
-		r.setBeta(this.beta);
 		r.setSumRate(this.scenario.getSumRate());
 		r.setMedianRate(this.scenario.getMedianRate());
 		r.setRequiredRate(this.scenario.getRequiredRate());
 		r.setUesServed(this.scenario.getUesServed());
 		r.setServingBSs( this.scenario.getServingBSs() );
-		r.setEvaluation( this.alpha * r.getUesServed() + this.beta * r.getServingBSs() );
+		r.setEvaluation(r.getUesServed() + r.getServingBSs() );
 		r.setScenario(this.scenario);
-		
-		return r;
-	}	
-	
-	public Result execUnifiedBiasEvolved(Double bias) {
 
-		this.biasOffset = new Double[20];
-		for (int i=0; i<this.biasOffset.length; i++)
-			this.biasOffset[i] = bias;
-
-		this.scenario.setBias(this.biasOffset);
-		this.scenario.evaluationEvolved();
-		
-		Result r = new Result();
-		
-		r.setBias(bias);
-		r.setAlpha(this.alpha);
-		r.setBeta(this.beta);
-		r.setSumRate(this.scenario.getSumRate());
-		r.setMedianRate(this.scenario.getMedianRate());
-		r.setRequiredRate(this.scenario.getRequiredRate());
-		r.setUesServed(this.scenario.getUesServed());
-		r.setServingBSs( this.scenario.getServingBSs() );
-		r.setEvaluation( this.alpha * r.getUesServed() + this.beta * r.getServingBSs() );
-		r.setScenario(this.scenario);
-		
 		return r;
 	}
-	
-	public Double getAlpha() {
-		return alpha;
-	}
 
-	public void setAlpha(Double alpha) {
-		this.alpha = alpha;
-	}
-
-	public Double getBeta() {
-		return beta;
-	}
-
-	public void setBeta(Double beta) {
-		this.beta = beta;
+	public Result getGA() {
+		GA ga = new GA(this.scenario);
+		ga.evolve();
+		return ga.getBestIndividual().getResult();
 	}
 
 	public Double[] getBiasOffset() {

@@ -11,10 +11,6 @@ public class CREEnv implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = 6824819508443271546L;
 
-	public Double[] alphas = {10.0, 2.0, 1.0, 1.0, 1.0};
-
-	public Double[] betas = {1.0, 1.0, 1.0, 2.0, 10.0};
-
 	public String workingDirectory = "/Users/hugo/Desktop/CRE/";
 	
 	private Integer simulations = 100;
@@ -84,16 +80,6 @@ public class CREEnv implements Serializable, Cloneable{
 		switch(param) {
 
 		case workingDirectory: this.workingDirectory = value; break;
-		
-		default: break;
-		
-		}
-	}
-	
-	public void set(Param param, Integer[] value) {
-		switch(param) {
-
-		case swarmSizeOptions: this.swarmSizeOptions = value; break;
 		
 		default: break;
 		
@@ -170,8 +156,6 @@ public class CREEnv implements Serializable, Cloneable{
 		case subframeDuration: this.subframeDuration = value; break;
 
 		case initialBias: this.initialBias = value; break;
-		
-		case psoSteps: this.psoSteps = value; break;
 
 		default: break;
 
@@ -410,22 +394,6 @@ public class CREEnv implements Serializable, Cloneable{
 		this.subframeDuration = subframeDuration;
 	}
 
-	public Double[] getAlphas() {
-		return alphas;
-	}
-
-	public void setAlphas(Double[] alphas) {
-		this.alphas = alphas;
-	}
-
-	public Double[] getBetas() {
-		return betas;
-	}
-
-	public void setBetas(Double[] betas) {
-		this.betas = betas;
-	}
-
 	public Double getPsoSteps() {
 		return psoSteps;
 	}
@@ -457,7 +425,7 @@ public class CREEnv implements Serializable, Cloneable{
 	public void setSimulations(Integer simulations) {
 		this.simulations = simulations;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "CREEnv [workingDirectory=" + workingDirectory + ", simulations=" + simulations + ", lambdaUser="
@@ -474,7 +442,7 @@ public class CREEnv implements Serializable, Cloneable{
 				+ ", generationSize=" + generationSize + ", psoSteps=" + psoSteps + ", swarmSizeOptions="
 				+ Arrays.toString(swarmSizeOptions) + "]";
 	}
-	
+
 	@Override
 	public Object clone() {
 		try {

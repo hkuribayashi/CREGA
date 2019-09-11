@@ -1,6 +1,7 @@
 package br.unifesspa.cre.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import br.unifesspa.cre.hetnet.Scenario;
 
@@ -13,10 +14,6 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	private Double sumRate;
 	
 	private Double medianRate;
-	
-	private Double alpha;
-	
-	private Double beta;
 	
 	private Double evaluation;
 	
@@ -43,8 +40,6 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		this.bias = bias;
 		this.sumRate = sumRate;
 		this.medianRate = medianRate;
-		this.alpha = alpha;
-		this.beta = beta;
 		this.requiredRate = 0.0;
 		this.uesServed = 0.0;
 		this.scenario = null;
@@ -72,22 +67,6 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 
 	public void setBias(Double bias) {
 		this.bias = bias;
-	}
-
-	public Double getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(Double alpha) {
-		this.alpha = alpha;
-	}
-
-	public Double getBeta() {
-		return beta;
-	}
-
-	public void setBeta(Double beta) {
-		this.beta = beta;
 	}
 
 	public Double getEvaluation() {
@@ -144,9 +123,9 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 
 	@Override
 	public String toString() {
-		return "\nResult [bias=" + bias + ", alpha=" + alpha + ", beta=" + beta + ", uesServed=" + uesServed
-				+ ", servingBSs=" + servingBSs + ", evaluation=" + evaluation + ", sumRate=" + sumRate + ", medianRate="
-				+ medianRate + ", requiredRate=" + requiredRate + "]";
+		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", evaluation="
+				+ evaluation + ", requiredRate=" + requiredRate + ", uesServed=" + uesServed + ", servingBSs="
+				+ servingBSs + ", scenario=" + scenario + ", solution=" + Arrays.toString(solution) + "]";
 	}
 
 	@Override
