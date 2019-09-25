@@ -1,7 +1,6 @@
 package br.unifesspa.cre.config;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * @author hugo
@@ -70,10 +69,6 @@ public class CREEnv implements Serializable, Cloneable{
 	private Integer kElitism = 2;
 
 	private Integer generationSize = 1000;
-
-	private Double psoSteps = 100.0;
-	
-	private Integer[] swarmSizeOptions = {20, 40, 60};
 
 
 	public void set(Param param, String value) {
@@ -394,28 +389,12 @@ public class CREEnv implements Serializable, Cloneable{
 		this.subframeDuration = subframeDuration;
 	}
 
-	public Double getPsoSteps() {
-		return psoSteps;
-	}
-
-	public void setPsoSteps(Double psoSteps) {
-		this.psoSteps = psoSteps;
-	}
-
 	public String getWorkingDirectory() {
 		return workingDirectory;
 	}
 
 	public void setWorkingDirectory(String workingDirectory) {
 		this.workingDirectory = workingDirectory;
-	}
-
-	public Integer[] getSwarmSizeOptions() {
-		return swarmSizeOptions;
-	}
-
-	public void setSwarmSizeOptions(Integer[] swarmSizeOptions) {
-		this.swarmSizeOptions = swarmSizeOptions;
 	}
 
 	public Integer getSimulations() {
@@ -439,8 +418,7 @@ public class CREEnv implements Serializable, Cloneable{
 				+ finalCrossoverProbability + ", initialMutationProbability=" + initialMutationProbability
 				+ ", finalMutationProbability=" + finalMutationProbability + ", initialGeneRange=" + initialGeneRange
 				+ ", finalGeneRange=" + finalGeneRange + ", populationSize=" + populationSize + ", kElitism=" + kElitism
-				+ ", generationSize=" + generationSize + ", psoSteps=" + psoSteps + ", swarmSizeOptions="
-				+ Arrays.toString(swarmSizeOptions) + "]";
+				+ ", generationSize=" + generationSize + "]";
 	}
 
 	@Override

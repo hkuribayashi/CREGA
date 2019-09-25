@@ -13,7 +13,7 @@ import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.util.Util;
 import br.unifesspa.cre.view.Topology;
 
-public class Scenario implements Serializable, Cloneable, Runnable{
+public class Scenario implements Serializable, Cloneable{
 
 	private static final long serialVersionUID = -1736505791936110187L;
 
@@ -79,18 +79,11 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		this.network = new NetworkElement[this.ue.size()][this.allBS.size()];
 	}
 
-	/**
-	 * Initialize bias vector for Phase 2 (Static Bias)
-	 * @param bias
-	 */
 	public void initBias(Double bias) {
 		for (int i=0; i<this.bias.length; i++)
 			this.bias[i] = bias;
 	}
 
-	/**
-	 * Performs the entire simulatio
-	 */
 	public void evaluation() {
 		this.getDistance();
 		this.getBiasedSINR();
@@ -101,14 +94,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		this.getEvaluationMetrics();
 	}
 
-
-	public void run() {
-		this.evaluation();
-	}
-
-	/**
-	 * Calculate the distance between Users and Femto BS's and Between Users and Macro BS's
-	 */
 	private void getDistance() {
 		for (int i=0; i<this.ue.size(); i++) {
 			UE u = this.ue.get(i);
@@ -122,9 +107,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 	}
 
-	/**
-	 * Calculates the downlink SINR from all BSs to all users
-	 */
 	private void getBiasedSINR() {
 
 		double bw = this.env.getBandwidth() * Math.pow(10.0, 6.0); 		
@@ -161,9 +143,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 	}
 
-	/**
-	 * Calculates the coverege matrix
-	 */
 	private void getCoverageMatrix() {
 		for (int i=0; i<this.network.length; i++) {
 			NetworkElement[] nea = this.network[i];
@@ -174,9 +153,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 	}
 
-	/**
-	 * Calculates de BS Load
-	 */
 	private void getBSLoad() {
 		for (int j=0; j<this.network[0].length; j++) {
 			double counter = 0.0;
@@ -188,9 +164,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 	}
 
-	/**
-	 * Performs the Resource Block Allocation Process for all BSs
-	 */
 	private void getResourceBlockAllocation() {
 
 		for (int i=0; i<this.network.length; i++) {
@@ -218,10 +191,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 			}
 		}
 	}
-	
-	/**
-	 * Calculates the UE birate in Mbps
-	 */
+
 	private void getBitRate() {
 
 		double bitrate = (this.env.getnSubcarriers() * this.env.getnOFDMSymbols() * this.env.getSubframeDuration() * 1000.0);
@@ -233,9 +203,6 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 	}
 
-	/**
-	 * Calculates performance evaluation final metrics
-	 */
 	private void getEvaluationMetrics() {
 		double sumRate = 0.0;
 		List<Double> bitrate = new ArrayList<Double>();
