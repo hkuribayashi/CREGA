@@ -14,6 +14,8 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	private Double evaluation;
 
 	private Double[] chromossome;
+	
+	private Double[] booleanChromossome;
 
 	private Scenario scenario;
 
@@ -33,9 +35,12 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		upperBound = this.scenario.getEnv().getFinalGeneRange();	
 
 		this.chromossome = new Double[chromossomeSize];
-
-		for (int i=0; i<chromossomeSize; i++)
+		this.booleanChromossome = new Double[chromossomeSize];
+		
+		for (int i=0; i<chromossomeSize; i++) {
 			this.chromossome[i] = Util.getUniformRealDistribution(lowerBound, upperBound);
+			this.booleanChromossome[i] = Math.random();
+		}
 	}
 
 	public Individual crossover(Individual otherIndividual) {
@@ -78,6 +83,29 @@ public class Individual implements Comparable<Individual>, Cloneable{
 			individual = this;
 		}
 		individual.setChromossome(son);
+		
+		
+		/* Teste */
+		
+		cut = (int) Math.round(Math.random() * this.chromossome.length);
+
+		f1 = Arrays.asList(this.getBooleanChromossome());
+		f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
+
+		s = new ArrayList<Double>();
+
+		if (Math.random() < 0.5) {
+			s.addAll(f1.subList(0, cut));
+			s.addAll(f2.subList(cut, f2.size()));	
+		}else {
+			s.addAll(f2.subList(0, cut));
+			s.addAll(f1.subList(cut, f1.size()));
+		}
+
+		son = new Double[s.size()];
+		son = s.toArray(son);
+
+		individual.setBooleanChromossome(son);
 
 		return individual;
 	}
@@ -217,26 +245,48 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		
 		this.evaluation = evaluation;
 	}
+	
+	public void evaluateOnOff() {
+		this.scenario.updateONOFF(this.booleanChromossome);
+		this.scenario.setBias(this.chromossome);
+		this.scenario.evaluation();
+		
+		this.result = new Result();
+		this.result.setSumRate(this.scenario.getSumRate());
+		this.result.setMedianRate(this.scenario.getMedianRate());
+		this.result.setRequiredRate(this.scenario.getRequiredRate());
+		this.result.setUesServed(this.scenario.getUesServed());
+		this.result.setServingBSs(this.scenario.getServingBSs());
+	
+		double evaluation = this.scenario.getUesServed() + this.scenario.getServingBSs();
+		this.result.setEvaluation(evaluation);
+		
+		this.evaluation = evaluation;
+	}
 
 	public Double getEvaluation() {
 		return evaluation;
 	}
 
-
 	public void setEvaluation(Double evaluation) {
 		this.evaluation = evaluation;
 	}
-
 
 	public Double[] getChromossome() {
 		return chromossome;
 	}
 
-
 	public void setChromossome(Double[] chromossome) {
 		this.chromossome = chromossome;
 	}
+	
+	public Double[] getBooleanChromossome() {
+		return booleanChromossome;
+	}
 
+	public void setBooleanChromossome(Double[] booleanChromossome) {
+		this.booleanChromossome = booleanChromossome;
+	}
 
 	public Scenario getScenario() {
 		return scenario;

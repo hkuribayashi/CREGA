@@ -12,6 +12,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.opencsv.CSVWriter;
 
+import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.hetnet.ApplicationProfile;
 import br.unifesspa.cre.hetnet.BSType;
 import br.unifesspa.cre.hetnet.Point;

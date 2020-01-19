@@ -15,6 +15,8 @@ public class NetworkElement implements Comparable<NetworkElement>,Serializable,C
 	private Double bandwith;
 	
 	private Double delay;
+	
+	private Double bsPowerTransmission;
 
 	public Double getDistance() {
 		return distance;
@@ -56,6 +58,14 @@ public class NetworkElement implements Comparable<NetworkElement>,Serializable,C
 		this.delay = delay;
 	}
 	
+	public Double getBsPowerTransmission() {
+		return bsPowerTransmission;
+	}
+
+	public void setBsPowerTransmission(Double bsPowerTransmission) {
+		this.bsPowerTransmission = bsPowerTransmission;
+	}
+
 	@Override
 	public Object clone() {
 		try {

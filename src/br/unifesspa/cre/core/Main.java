@@ -3,6 +3,8 @@ package br.unifesspa.cre.core;
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.config.Param;
 import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.model.Result;
+import br.unifesspa.cre.util.Util;
 
 public class Main {
 
@@ -20,7 +22,7 @@ public class Main {
 		env.set(Param.lambdaUser, 0.0003);     // 0.0003 Users/m^2 = 300 Users 
 		env.set(Param.lambdaMacro, 0.000002);  // 0.000002 Macros/m^2 = 2 Macros
 		env.set(Param.powerMacro, 46.0);	   // dBm
-		env.set(Param.powerSmall, 30.0);	   // dBm
+		env.set(Param.powerSmall, 23.0);	   // dBm
 		env.set(Param.noisePower, -174.0);	   // dBm/Hz
 		env.set(Param.gainMacro, 15.0);		   // dBi
 		env.set(Param.gainSmall, 5.0);		   // dBi
@@ -51,17 +53,25 @@ public class Main {
 		System.out.println("Experiment 01: No Bias");
 		System.out.println();
 		
-		//Experiment 02
-
-		System.out.println("Experiment 02: Unified Bias");
-		System.out.println();
+		Scenario s = new Scenario(env);
+		s.initBias(0.0);
+		s.evaluation();
 		
-		//Experiment 03
-
-		System.out.println("Experiment 03: GA Bias ");
-
-		Scenario scenario = new Scenario(env);
-		Engine e = new Engine(scenario);
-		System.out.println( e.getGA() );
+		System.out.println( s.getSumRate() );
+		System.out.println( s.getMedianRate() );
+		
+		s.initBias(40.0); //Adicionando 30.0 dB para cada Small Cell
+		s.evaluation();
+		
+		System.out.println( s.getSumRate() );
+		System.out.println( s.getMedianRate() );
+	
+		Engine e = new Engine(s);
+		Result r = e.getGA();
+		
+		System.out.println(r.getSumRate());
+		System.out.println(r.getMedianRate());
+		
+		
 	}
 }

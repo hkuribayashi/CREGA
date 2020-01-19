@@ -79,6 +79,8 @@ public class Engine{
 		ga.evolve();
 		return ga.getBestIndividual().getResult();
 	}
+	
+	
 
 	public Double[] getBiasOffset() {
 		return biasOffset;

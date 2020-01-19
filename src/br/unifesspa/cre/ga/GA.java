@@ -57,7 +57,7 @@ public class GA{
 		Double sum = 0.0;
 		int i=0;
 		while (i<this.population.size()) {
-			this.population.get(i).evaluate();
+			this.population.get(i).evaluateOnOff();
 			sum += this.population.get(i).getEvaluation();
 			i++;
 		}
@@ -73,6 +73,7 @@ public class GA{
 		List<Individual> kElitism = new ArrayList<Individual>();
 				
 		while (currentGeneration < this.scenario.getEnv().getGenerationSize()) {
+			
 			Double sum = this.evaluate();
 	
 			List<Individual> newPopulation = new ArrayList<Individual>();

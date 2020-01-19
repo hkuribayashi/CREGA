@@ -83,6 +83,17 @@ public class Scenario implements Serializable, Cloneable{
 		for (int i=0; i<this.bias.length; i++)
 			this.bias[i] = bias;
 	}
+	
+	public void updateONOFF(Double[] onoffChromossome) {
+		
+		for (int j=0; j<onoffChromossome.length; j++) {
+			if (onoffChromossome[j] < 0.5) {
+				for (int i=0; i<this.network.length; i++) {
+					this.network[i][j].setBsPowerTransmission(0.0);
+				}
+			}
+		}
+	}
 
 	public void evaluation() {
 		this.getDistance();
@@ -102,6 +113,7 @@ public class Scenario implements Serializable, Cloneable{
 				double d = Util.getDistance(u.getPoint(), bs.getPoint());
 				NetworkElement n = new NetworkElement();
 				n.setDistance(d);
+				n.setBsPowerTransmission(bs.getPower());
 				this.network[i][j] = n; 
 			}
 		}
@@ -120,13 +132,13 @@ public class Scenario implements Serializable, Cloneable{
 			for (int j=0; j<this.allBS.size(); j++) {
 				sum = 0.0;
 				BS bs = this.allBS.get(j);
-				double pr = bs.getPower() - Util.getPathLoss(bs.getType(), this.network[i][j].getDistance(), bs.getTxGain());
+				double pr = this.network[i][j].getBsPowerTransmission() - Util.getPathLoss(bs.getType(), this.network[i][j].getDistance(), bs.getTxGain());
 				double prLin =  Math.pow(10.0, -3.0) * Math.pow(10.0,(pr/10.0));
 
 				for (int k=0; k<this.allBS.size(); k++) {
 					BS b = this.allBS.get(k);
 					if (!b.equals(bs)) {
-						double prK = b.getPower() - Util.getPathLoss(b.getType(), this.network[i][k].getDistance(), b.getTxGain());
+						double prK = this.network[i][j].getBsPowerTransmission() - Util.getPathLoss(b.getType(), this.network[i][k].getDistance(), b.getTxGain());
 						double prLinK =  Math.pow(10.0, -3.0) * Math.pow(10.0,(prK/10.0));
 						sum += prLinK;
 					}
