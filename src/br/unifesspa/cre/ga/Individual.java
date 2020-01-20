@@ -88,9 +88,16 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		individual.setChromossome(son);
 		
 		
-		//Faz crossover de um ponto no cromosso bin√°rio - TESTAR
+		//Faz crossover de um ponto no cromosso bin·rio - TESTAR
 		
 		cut = (int) Math.round(Math.random() * this.chromossome.length);
+		
+		System.out.println("Individuo 1: ");
+		Util.print(this.getBooleanChromossome());
+		
+		System.out.println("Individuo 2: ");
+		Util.print(otherIndividual.getBooleanChromossome());
+		System.out.println();
 
 		f1 = Arrays.asList(this.getBooleanChromossome());
 		f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
@@ -107,6 +114,9 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 		son = new Double[s.size()];
 		son = s.toArray(son);
+		
+		System.out.println("Individuo 1: ");
+		Util.print(individual.getBooleanChromossome());
 
 		individual.setBooleanChromossome(son);
 
@@ -114,8 +124,8 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 
 	private Individual twoPointCrossover(Individual otherIndividual) {
-		
 		//Faz crossover de dois pontos no cromosso de bias
+		
 		int cut1 = (int) Math.round(Math.random() * this.chromossome.length);
 		int cut2 = (int) Math.round(Math.random() * (this.chromossome.length - cut1) );
 
@@ -126,14 +136,15 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 		List<Double> s = new ArrayList<Double>();
 
+		
 		if (Math.random() < 0.5) {
 			s.addAll(f1.subList(0, cut1));
-			s.addAll(f1.subList(cut1, cut2));
+			s.addAll(f2.subList(cut1, cut2));
 			s.addAll(f1.subList(cut2, f1.size()));	
 		}else {
 			s.addAll(f2.subList(0, cut1));
 			s.addAll(f1.subList(cut1, cut2));
-			s.addAll(f1.subList(cut2, f1.size()));
+			s.addAll(f2.subList(cut2, f2.size()));
 		}
 
 		Double[] son = new Double[s.size()];
@@ -149,8 +160,13 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		individual.setChromossome(son);
 		
 		
-		//Faz crossover de dois pontos no cromosso bin√°rio - TESTAR 
+		//Faz crossover de dois pontos no cromosso bin·rio - TESTAR 
 		
+		cut1 = (int) Math.round(Math.random() * this.booleanChromossome.length);
+		cut2 = (int) Math.round(Math.random() * (this.booleanChromossome.length - cut1) );
+
+		cut2 += cut1;
+
 		System.out.println("Individuo 1: ");
 		Util.print(this.getBooleanChromossome());
 		
@@ -158,11 +174,6 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		Util.print(otherIndividual.getBooleanChromossome());
 		System.out.println();
 		
-		cut1 = (int) Math.round(Math.random() * this.booleanChromossome.length);
-		cut2 = (int) Math.round(Math.random() * (this.booleanChromossome.length - cut1) );
-
-		cut2 += cut1;
-
 		f1 = Arrays.asList(this.getBooleanChromossome());
 		f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
 
@@ -170,25 +181,21 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 		if (Math.random() < 0.5) {
 			s.addAll(f1.subList(0, cut1));
-			s.addAll(f1.subList(cut1, cut2));
+			s.addAll(f2.subList(cut1, cut2));
 			s.addAll(f1.subList(cut2, f1.size()));	
 		}else {
 			s.addAll(f2.subList(0, cut1));
 			s.addAll(f1.subList(cut1, cut2));
-			s.addAll(f1.subList(cut2, f1.size()));
+			s.addAll(f2.subList(cut2, f2.size()));
 		}
 
 		son = new Double[s.size()];
 		son = s.toArray(son);
 
-		
-		individual.setBooleanChromossome(son);
-		
-		
 		System.out.println("Individuo 1: ");
 		Util.print(individual.getBooleanChromossome());
 		
-		System.exit(0);
+		individual.setBooleanChromossome(son);
 
 		return individual;
 	}
@@ -217,6 +224,35 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		}
 
 		individual.setChromossome(son);
+		
+		// Faz o uniformCrossover do Boolean
+		
+		f1 = Arrays.asList(this.getBooleanChromossome());
+		f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
+		s = new ArrayList<Double>();
+		
+		System.out.println("Individuo 1: ");
+		Util.print(this.getChromossome());
+		
+		System.out.println("Individuo 2: ");
+		Util.print(otherIndividual.getChromossome());
+		System.out.println();
+
+		for (int i=0; i < f1.size(); i++) {
+			if (Math.random() < 0.5)
+				s.addAll(f1.subList(i, i + 1));
+			else s.addAll(f2.subList(i, i + 1));
+		}
+
+		son = new Double[s.size()];
+		son = s.toArray(son);
+
+		individual.setBooleanChromossome(son);
+		
+		System.out.println("Individuo 1: ");
+		Util.print(individual.getChromossome());
+		
+		System.exit(0);
 
 		return individual;
 	}
