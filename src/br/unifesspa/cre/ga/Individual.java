@@ -280,6 +280,15 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		for (int i=0; i<this.chromossome.length; i++)
 			if (Math.random() < probability)
 				this.chromossome[i] = Util.getUniformRealDistribution(lower, upper);
+		
+		// Faz a randomMutation com o binário
+		
+		double lowerBoolean = Collections.min(Arrays.asList(this.booleanChromossome));
+		double upperBoolean = Collections.max(Arrays.asList(this.booleanChromossome));
+
+		for (int i=0; i<this.booleanChromossome.length; i++)
+			if (Math.random() < probability)
+				this.booleanChromossome[i] = Util.getUniformRealDistribution(lowerBoolean, upperBoolean);
 	}
 
 	private void notUniformMutation(int currentGeneration, double probability) {
@@ -290,16 +299,41 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		double lowerBound = this.scenario.getEnv().getInitialGeneRange();
 		double upperBound = this.scenario.getEnv().getFinalGeneRange();
 
+
 		while (i<this.chromossome.length) {
 
 			if (Math.random() < probability) {
 				int tau = Util.getUniformIntegerDistribution(0, 1);
 
-				if (tau == 0) 
+				if (tau == 0) {
 					aux = this.chromossome[i] + this.delta(currentGeneration, (upperBound-this.chromossome[i]), generationsSize, 10);
-				else aux = this.chromossome[i] - this.delta(currentGeneration, (this.chromossome[i]-lowerBound), generationsSize, 10);
+				}else {
+					aux = this.chromossome[i] - this.delta(currentGeneration, (this.chromossome[i]-lowerBound), generationsSize, 10);
+				}
 
 				this.chromossome[i] = aux;
+			}
+			i++;	
+		}
+		
+		// Faz a notUniformMutation com o binário
+		
+		generationsSize = this.scenario.getEnv().getGenerationSize();
+		double lowerBoundBoolean = 0.0;
+		double upperBoundBoolean = 1.0;
+		
+		while (i<this.booleanChromossome.length) {
+
+			if (Math.random() < probability) {
+				int tau = Util.getUniformIntegerDistribution(0, 1);
+
+				if (tau == 0) {
+					aux = this.booleanChromossome[i] + this.delta(currentGeneration, (upperBoundBoolean-this.booleanChromossome[i]), generationsSize, 10);
+				}else {
+					aux = this.booleanChromossome[i] - this.delta(currentGeneration, (this.booleanChromossome[i]-lowerBoundBoolean), generationsSize, 10);
+				}
+
+				this.booleanChromossome[i] = aux;
 			}
 			i++;	
 		}
