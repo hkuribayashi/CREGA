@@ -57,14 +57,7 @@ public class Main {
 		s.initBias(0.0);
 		s.evaluation();
 		
-		System.out.println( s.getSumRate() );
-		System.out.println( s.getMedianRate() );
 		
-		s.initBias(40.0); //Adicionando 30.0 dB para cada Small Cell
-		s.evaluation();
-		
-		System.out.println( s.getSumRate() );
-		System.out.println( s.getMedianRate() );
 	
 		Engine e = new Engine(s);
 		Result r = e.getGA();
