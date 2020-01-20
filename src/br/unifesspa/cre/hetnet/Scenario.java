@@ -91,6 +91,10 @@ public class Scenario implements Serializable, Cloneable{
 				for (int i=0; i<this.network.length; i++) {
 					this.network[i][j].setBsPowerTransmission(0.0);
 				}
+			}else {
+				for (int i=0; i<this.network.length; i++) {
+					this.network[i][j].setBsPowerTransmission(23.0);
+				}
 			}
 		}
 	}
