@@ -5,42 +5,40 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.model.Result;
 import br.unifesspa.cre.util.Util;
 
-public class Individual implements Comparable<Individual>, Cloneable{
-
-	private Double evaluation;
+public class Individual implements Cloneable, Comparable<Individual>{
 
 	private Double[] chromossome;
-	
+
 	private Double[] booleanChromossome;
 
-	private Scenario scenario;
+	private CREEnv env;
 
 	private Result result;
 
-	public Individual(Scenario scenario) {
+	private Boolean flag;
+	
+	public Individual(CREEnv env, Boolean flag) {
 
-		this.scenario = scenario;
-		this.evaluation = 0.0;
-		this.result = null;
+		this.env = env;
 
-		Double qtdMacro = this.scenario.getEnv().getArea() * this.scenario.getEnv().getLambdaMacro();
-		int chromossomeSize = this.scenario.getAllBS().size()-(qtdMacro.intValue());
-		double lowerBound, upperBound;
+		double lowerBound = env.getInitialGeneRange();
+		double upperBound = env.getFinalGeneRange();
 
-		lowerBound = this.scenario.getEnv().getInitialGeneRange();
-		upperBound = this.scenario.getEnv().getFinalGeneRange();	
+		int chromossomeSize = 20;
 
 		this.chromossome = new Double[chromossomeSize];
 		this.booleanChromossome = new Double[chromossomeSize];
-		
+
 		for (int i=0; i<chromossomeSize; i++) {
 			this.chromossome[i] = Util.getUniformRealDistribution(lowerBound, upperBound);
 			this.booleanChromossome[i] = Math.random();
 		}
+
+		this.flag = flag;
 	}
 
 	public Individual crossover(Individual otherIndividual) {
@@ -57,9 +55,9 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	}
 
 	private Individual onePointCrossover(Individual otherIndividual) {
-		
+
 		//Faz crossover de um ponto no cromosso de bias
-		
+
 		int cut = (int) Math.round(Math.random() * this.chromossome.length);
 
 		List<Double> f1 = Arrays.asList(this.getChromossome());
@@ -78,54 +76,38 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		Double[] son = new Double[s.size()];
 		son = s.toArray(son);
 
-		Individual individual = null;
-		try {
-			individual = (Individual) this.clone();
-			individual.setChromossome(son);
-		} catch (CloneNotSupportedException e) {
-			individual = this;
-		}
+		Individual individual = (Individual) this.clone();
 		individual.setChromossome(son);
-		
-		
-		//Faz crossover de um ponto no cromosso binário - TESTAR
-		
-		cut = (int) Math.round(Math.random() * this.chromossome.length);
-		
-		System.out.println("Individuo 1: ");
-		Util.print(this.getBooleanChromossome());
-		
-		System.out.println("Individuo 2: ");
-		Util.print(otherIndividual.getBooleanChromossome());
-		System.out.println();
 
-		f1 = Arrays.asList(this.getBooleanChromossome());
-		f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
+		if (this.flag) {
 
-		s = new ArrayList<Double>();
+			cut = (int) Math.round(Math.random() * this.chromossome.length);
 
-		if (Math.random() < 0.5) {
-			s.addAll(f1.subList(0, cut));
-			s.addAll(f2.subList(cut, f2.size()));	
-		}else {
-			s.addAll(f2.subList(0, cut));
-			s.addAll(f1.subList(cut, f1.size()));
+			f1 = Arrays.asList(this.getBooleanChromossome());
+			f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
+
+			s = new ArrayList<Double>();
+
+			if (Math.random() < 0.5) {
+				s.addAll(f1.subList(0, cut));
+				s.addAll(f2.subList(cut, f2.size()));	
+			}else {
+				s.addAll(f2.subList(0, cut));
+				s.addAll(f1.subList(cut, f1.size()));
+			}
+
+			son = new Double[s.size()];
+			son = s.toArray(son);
+
+			individual.setBooleanChromossome(son);
 		}
-
-		son = new Double[s.size()];
-		son = s.toArray(son);
-		
-		System.out.println("Individuo 1: ");
-		Util.print(individual.getBooleanChromossome());
-
-		individual.setBooleanChromossome(son);
 
 		return individual;
 	}
 
 	private Individual twoPointCrossover(Individual otherIndividual) {
 		//Faz crossover de dois pontos no cromosso de bias
-		
+
 		int cut1 = (int) Math.round(Math.random() * this.chromossome.length);
 		int cut2 = (int) Math.round(Math.random() * (this.chromossome.length - cut1) );
 
@@ -136,7 +118,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 		List<Double> s = new ArrayList<Double>();
 
-		
+
 		if (Math.random() < 0.5) {
 			s.addAll(f1.subList(0, cut1));
 			s.addAll(f2.subList(cut1, cut2));
@@ -150,52 +132,36 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		Double[] son = new Double[s.size()];
 		son = s.toArray(son);
 
-		Individual individual = null;
-		try {
-			individual = (Individual) this.clone();
-			individual.setChromossome(son);
-		} catch (CloneNotSupportedException e) {
-			individual = this;
-		}
+		Individual individual = (Individual) this.clone();
 		individual.setChromossome(son);
-		
-		
-		//Faz crossover de dois pontos no cromosso binário - TESTAR 
-		
-		cut1 = (int) Math.round(Math.random() * this.booleanChromossome.length);
-		cut2 = (int) Math.round(Math.random() * (this.booleanChromossome.length - cut1) );
 
-		cut2 += cut1;
+		if (this.flag) {
 
-		System.out.println("Individuo 1: ");
-		Util.print(this.getBooleanChromossome());
-		
-		System.out.println("Individuo 2: ");
-		Util.print(otherIndividual.getBooleanChromossome());
-		System.out.println();
-		
-		f1 = Arrays.asList(this.getBooleanChromossome());
-		f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
+			cut1 = (int) Math.round(Math.random() * this.booleanChromossome.length);
+			cut2 = (int) Math.round(Math.random() * (this.booleanChromossome.length - cut1) );
 
-		s = new ArrayList<Double>();
+			cut2 += cut1;
 
-		if (Math.random() < 0.5) {
-			s.addAll(f1.subList(0, cut1));
-			s.addAll(f2.subList(cut1, cut2));
-			s.addAll(f1.subList(cut2, f1.size()));	
-		}else {
-			s.addAll(f2.subList(0, cut1));
-			s.addAll(f1.subList(cut1, cut2));
-			s.addAll(f2.subList(cut2, f2.size()));
+			f1 = Arrays.asList(this.getBooleanChromossome());
+			f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
+
+			s = new ArrayList<Double>();
+
+			if (Math.random() < 0.5) {
+				s.addAll(f1.subList(0, cut1));
+				s.addAll(f2.subList(cut1, cut2));
+				s.addAll(f1.subList(cut2, f1.size()));	
+			}else {
+				s.addAll(f2.subList(0, cut1));
+				s.addAll(f1.subList(cut1, cut2));
+				s.addAll(f2.subList(cut2, f2.size()));
+			}
+
+			son = new Double[s.size()];
+			son = s.toArray(son);
+
+			individual.setBooleanChromossome(son);
 		}
-
-		son = new Double[s.size()];
-		son = s.toArray(son);
-
-		System.out.println("Individuo 1: ");
-		Util.print(individual.getBooleanChromossome());
-		
-		individual.setBooleanChromossome(son);
 
 		return individual;
 	}
@@ -214,56 +180,36 @@ public class Individual implements Comparable<Individual>, Cloneable{
 
 		Double[] son = new Double[s.size()];
 		son = s.toArray(son);
-		Individual individual = null;
-
-		try {
-			individual = (Individual) this.clone();
-			individual.setChromossome(son);
-		} catch (CloneNotSupportedException e) {
-			individual = this;
-		}
-
+		Individual individual = (Individual) this.clone();
 		individual.setChromossome(son);
-		
-		// Faz o uniformCrossover do Boolean
-		
-		f1 = Arrays.asList(this.getBooleanChromossome());
-		f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
-		s = new ArrayList<Double>();
-		
-		System.out.println("Individuo 1: ");
-		Util.print(this.getChromossome());
-		
-		System.out.println("Individuo 2: ");
-		Util.print(otherIndividual.getChromossome());
-		System.out.println();
 
-		for (int i=0; i < f1.size(); i++) {
-			if (Math.random() < 0.5)
-				s.addAll(f1.subList(i, i + 1));
-			else s.addAll(f2.subList(i, i + 1));
+		if (this.flag) {
+
+			f1 = Arrays.asList(this.getBooleanChromossome());
+			f2 = Arrays.asList(otherIndividual.getBooleanChromossome());
+			s = new ArrayList<Double>();
+
+			for (int i=0; i < f1.size(); i++) {
+				if (Math.random() < 0.5)
+					s.addAll(f1.subList(i, i + 1));
+				else s.addAll(f2.subList(i, i + 1));
+			}
+
+			son = new Double[s.size()];
+			son = s.toArray(son);
+
+			individual.setBooleanChromossome(son);
 		}
-
-		son = new Double[s.size()];
-		son = s.toArray(son);
-
-		individual.setBooleanChromossome(son);
-		
-		System.out.println("Individuo 1: ");
-		Util.print(individual.getChromossome());
-		
-		System.exit(0);
 
 		return individual;
 	}
-
 
 	public void mutation(int currentGereneration) {
 
 		int index = Util.getUniformIntegerDistribution(0, MutationStrategy.values().length-1);
 		MutationStrategy strategy = MutationStrategy.values()[index];
 
-		double probability = this.scenario.getEnv().getInitialMutationProbability();
+		double probability = env.getInitialMutationProbability();
 
 		switch(strategy) {
 		case Random: randomMutation(probability); break;
@@ -280,113 +226,67 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		for (int i=0; i<this.chromossome.length; i++)
 			if (Math.random() < probability)
 				this.chromossome[i] = Util.getUniformRealDistribution(lower, upper);
-		
-		// Faz a randomMutation com o binário
-		
-		double lowerBoolean = Collections.min(Arrays.asList(this.booleanChromossome));
-		double upperBoolean = Collections.max(Arrays.asList(this.booleanChromossome));
 
-		for (int i=0; i<this.booleanChromossome.length; i++)
-			if (Math.random() < probability)
-				this.booleanChromossome[i] = Util.getUniformRealDistribution(lowerBoolean, upperBoolean);
+		if (this.flag) {
+			double lowerBoolean = Collections.min(Arrays.asList(this.booleanChromossome));
+			double upperBoolean = Collections.max(Arrays.asList(this.booleanChromossome));
+
+			for (int i=0; i<this.booleanChromossome.length; i++)
+				if (Math.random() < probability)
+					this.booleanChromossome[i] = Util.getUniformRealDistribution(lowerBoolean, upperBoolean);
+		}
 	}
 
 	private void notUniformMutation(int currentGeneration, double probability) {
 
 		double aux = 0.0;
 		int i=0;
-		int generationsSize = this.scenario.getEnv().getGenerationSize();
-		double lowerBound = this.scenario.getEnv().getInitialGeneRange();
-		double upperBound = this.scenario.getEnv().getFinalGeneRange();
+		int generationsSize = env.getGenerationSize();
+		double lowerBound = env.getInitialGeneRange();
+		double upperBound = env.getFinalGeneRange();
 
 
 		while (i<this.chromossome.length) {
 
 			if (Math.random() < probability) {
-				int tau = Util.getUniformIntegerDistribution(0, 1);
-
-				if (tau == 0) {
+				double tau = Math.random();
+				if (tau < 0.5) 
 					aux = this.chromossome[i] + this.delta(currentGeneration, (upperBound-this.chromossome[i]), generationsSize, 10);
-				}else {
-					aux = this.chromossome[i] - this.delta(currentGeneration, (this.chromossome[i]-lowerBound), generationsSize, 10);
-				}
+				else aux = this.chromossome[i] - this.delta(currentGeneration, (this.chromossome[i]-lowerBound), generationsSize, 10);
 
 				this.chromossome[i] = aux;
 			}
 			i++;	
 		}
-		
-		// Faz a notUniformMutation com o binário
-		
-		generationsSize = this.scenario.getEnv().getGenerationSize();
-		double lowerBoundBoolean = 0.0;
-		double upperBoundBoolean = 1.0;
-		
-		while (i<this.booleanChromossome.length) {
 
-			if (Math.random() < probability) {
-				int tau = Util.getUniformIntegerDistribution(0, 1);
+		if (this.flag) {
+			generationsSize = env.getGenerationSize();
+			double lowerBoundBoolean = 0.0;
+			double upperBoundBoolean = 1.0;
 
-				if (tau == 0) {
-					aux = this.booleanChromossome[i] + this.delta(currentGeneration, (upperBoundBoolean-this.booleanChromossome[i]), generationsSize, 10);
-				}else {
-					aux = this.booleanChromossome[i] - this.delta(currentGeneration, (this.booleanChromossome[i]-lowerBoundBoolean), generationsSize, 10);
+			while (i<this.booleanChromossome.length) {
+
+				if (Math.random() < probability) {
+					int tau = Util.getUniformIntegerDistribution(0, 1);
+
+					if (tau == 0) {
+						aux = this.booleanChromossome[i] + this.delta(currentGeneration, (upperBoundBoolean-this.booleanChromossome[i]), generationsSize, 10);
+					}else {
+						aux = this.booleanChromossome[i] - this.delta(currentGeneration, (this.booleanChromossome[i]-lowerBoundBoolean), generationsSize, 10);
+					}
+
+					this.booleanChromossome[i] = aux;
 				}
-
-				this.booleanChromossome[i] = aux;
+				i++;	
 			}
-			i++;	
-		}
 
+		}
 	}
 
 	private Double delta(int t, double y, double gmax, double b) {
 		double r = Math.random();
 		double z = Math.pow(1-(t/gmax),b);
 		return y * (1 - Math.pow(r, z));
-	}
-
-	public void evaluate() {
-		this.scenario.setBias(this.chromossome);
-		this.scenario.evaluation();
-		
-		this.result = new Result();
-		this.result.setSumRate(this.scenario.getSumRate());
-		this.result.setMedianRate(this.scenario.getMedianRate());
-		this.result.setRequiredRate(this.scenario.getRequiredRate());
-		this.result.setUesServed(this.scenario.getUesServed());
-		this.result.setServingBSs(this.scenario.getServingBSs());
-	
-		double evaluation = this.scenario.getUesServed() + this.scenario.getServingBSs();
-		this.result.setEvaluation(evaluation);
-		
-		this.evaluation = evaluation;
-	}
-	
-	public void evaluateOnOff() {
-		this.scenario.updateONOFF(this.booleanChromossome);
-		this.scenario.setBias(this.chromossome);
-		this.scenario.evaluation();
-		
-		this.result = new Result();
-		this.result.setSumRate(this.scenario.getSumRate());
-		this.result.setMedianRate(this.scenario.getMedianRate());
-		this.result.setRequiredRate(this.scenario.getRequiredRate());
-		this.result.setUesServed(this.scenario.getUesServed());
-		this.result.setServingBSs(this.scenario.getServingBSs());
-	
-		double evaluation = this.scenario.getUesServed() + this.scenario.getServingBSs();
-		this.result.setEvaluation(evaluation);
-		
-		this.evaluation = evaluation;
-	}
-
-	public Double getEvaluation() {
-		return evaluation;
-	}
-
-	public void setEvaluation(Double evaluation) {
-		this.evaluation = evaluation;
 	}
 
 	public Double[] getChromossome() {
@@ -396,7 +296,7 @@ public class Individual implements Comparable<Individual>, Cloneable{
 	public void setChromossome(Double[] chromossome) {
 		this.chromossome = chromossome;
 	}
-	
+
 	public Double[] getBooleanChromossome() {
 		return booleanChromossome;
 	}
@@ -405,13 +305,12 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.booleanChromossome = booleanChromossome;
 	}
 
-	public Scenario getScenario() {
-		return scenario;
+	public CREEnv getEnv() {
+		return env;
 	}
 
-
-	public void setScenario(Scenario scenario) {
-		this.scenario = scenario;
+	public void setEnv(CREEnv env) {
+		this.env = env;
 	}
 
 	public Result getResult() {
@@ -422,12 +321,30 @@ public class Individual implements Comparable<Individual>, Cloneable{
 		this.result = result;
 	}
 
+	public Boolean getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Boolean flag) {
+		this.flag = flag;
+	}
+
+	@Override
+	public Object clone() {
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@Override
 	public int compareTo(Individual o) {
-		if (this.evaluation == o.getEvaluation()) {
+		if (this.result.getEvaluation().doubleValue() == o.result.getEvaluation().doubleValue() )
 			return 0;
-		}else if (this.evaluation > o.getEvaluation()) {
+		else if (this.result.getEvaluation().doubleValue() > o.result.getEvaluation().doubleValue() )
 			return 1;
-		}else return 0;
+		else return -1;
 	}
 }

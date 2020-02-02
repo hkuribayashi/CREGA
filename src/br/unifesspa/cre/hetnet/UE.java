@@ -1,6 +1,8 @@
 package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UE implements Serializable, Cloneable{
 
@@ -10,11 +12,13 @@ public class UE implements Serializable, Cloneable{
 	
 	private ApplicationProfile profile;
 	
-	private Double bitrate;
+	private double bitrate;
 	
-	private Double nRB;
+	private double nRB;
 	
-	private Double bitsPerOFDMSymbol;
+	private double bitsPerOFDMSymbol;
+	
+	private List<NetworkElement> bs;
 
 	public UE() {
 		super();
@@ -27,6 +31,7 @@ public class UE implements Serializable, Cloneable{
 		this.bitrate = 0.0;
 		this.nRB = 0.0;
 		this.bitsPerOFDMSymbol = 2.0;
+		this.bs = new ArrayList<NetworkElement>();
 	}
 
 	public Point getPoint() {
@@ -69,16 +74,22 @@ public class UE implements Serializable, Cloneable{
 		this.bitsPerOFDMSymbol = bitsPerOFDMSymbol;
 	}
 	
-	
+	public List<NetworkElement> getBs() {
+		return bs;
+	}
+
+	public void setBs(List<NetworkElement> bs) {
+		this.bs = bs;
+	}
+
 	@Override
-	public Object clone() {
+	protected Object clone() {
 		try {
-			UE test = (UE) super.clone();
-			test.setPoint(new Point(this.point.getX(), this.point.getY(), this.point.getZ()));
-			return test;
+			return super.clone();
 		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return this;
+			return null;
 		}
 	}
 }

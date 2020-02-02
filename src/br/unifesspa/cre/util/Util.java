@@ -12,9 +12,9 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.opencsv.CSVWriter;
 
-import br.unifesspa.cre.ga.NetworkElement;
 import br.unifesspa.cre.hetnet.ApplicationProfile;
 import br.unifesspa.cre.hetnet.BSType;
+import br.unifesspa.cre.hetnet.NetworkElement;
 import br.unifesspa.cre.hetnet.Point;
 import br.unifesspa.cre.model.Result;
 
@@ -231,7 +231,6 @@ public class Util {
 	public static Result getMean(List<Result> results) {
 
 		Result result = new Result();
-		result.setScenario(results.get(0).getScenario());
 
 		List<Double> biasValues = new ArrayList<Double>();
 		List<Double> evaluationValues = new ArrayList<Double>();
@@ -327,5 +326,14 @@ public class Util {
 			d[i] = a[i] + b[i] + c[i];
 		}
 		return d;
+	}
+	
+	public static void print(NetworkElement[][] net) {
+		for (int i=0; i<net.length; i++) {
+			for (int j=0; j<net[0].length; j++) {
+				System.out.print(net[i][j].getCoverageStatus()+" ");
+			}
+			System.out.println();
+		}
 	}
 }

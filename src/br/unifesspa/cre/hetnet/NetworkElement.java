@@ -1,22 +1,24 @@
-package br.unifesspa.cre.ga;
+package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
 
-public class NetworkElement implements Comparable<NetworkElement>,Serializable,Cloneable{
+public class NetworkElement implements Comparable<NetworkElement>, Serializable, Cloneable{
 
 	private static final long serialVersionUID = -670526476345447198L;
 
-	private Double distance;
+	private UE ue;
 	
-	private Boolean coverageStatus = false;
+	private BS bs;
+	
+	private double distance;
+	
+	private boolean coverageStatus = false;
 	
 	private double sinr;
 	
-	private Double bandwith;
+	private double bandwith;
 	
-	private Double delay;
-	
-	private Double bsPowerTransmission;
+	private double delay;
 
 	public Double getDistance() {
 		return distance;
@@ -57,22 +59,35 @@ public class NetworkElement implements Comparable<NetworkElement>,Serializable,C
 	public void setDelay(Double delay) {
 		this.delay = delay;
 	}
+
+	public UE getUe() {
+		return ue;
+	}
+
+	public void setUe(UE ue) {
+		this.ue = ue;
+	}
+
+	public void setSinr(double sinr) {
+		this.sinr = sinr;
+	}
+
+	public BS getBs() {
+		return bs;
+	}
+
+	public void setBs(BS bs) {
+		this.bs = bs;
+	}
 	
-	public Double getBsPowerTransmission() {
-		return bsPowerTransmission;
-	}
-
-	public void setBsPowerTransmission(Double bsPowerTransmission) {
-		this.bsPowerTransmission = bsPowerTransmission;
-	}
-
 	@Override
 	public Object clone() {
 		try {
 			return super.clone();
 		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return this;
+			return null;
 		}
 	}
 

@@ -70,8 +70,8 @@ public class Topology extends JComponent{
 	    
 	    g2.setColor(Color.BLUE);
 	    	    
-	    for (int i=0; i<this.scenario.getUe().size(); i++) {
-	    	Point p = this.scenario.getUe().get(i).getPoint();
+	    for (int i=0; i<this.scenario.getUes().size(); i++) {
+	    	Point p = this.scenario.getUes().get(i).getPoint();
 	    	rect = new Rectangle2D.Double(p.getX(), p.getY(), dimension, dimension);
 			g2.fill(rect);
 	    }

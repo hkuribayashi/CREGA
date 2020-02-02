@@ -2,9 +2,7 @@ package br.unifesspa.cre.core;
 
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.config.Param;
-import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
-import br.unifesspa.cre.util.Util;
 
 public class Main {
 
@@ -32,39 +30,52 @@ public class Main {
 		env.set(Param.workingDirectory, path); // Working Directory
 		env.set(Param.simulations, 50.0);	   // Number of Simulations
 
-		//Setting Parameters to Phase 1: Static Bias		
-		env.set(Param.totalBias, 100);
-		env.set(Param.biasStep, 1.0);
-		env.set(Param.initialBias, -10.0);
-
 		//Setting GA Parameters
 		env.set(Param.initialCrossoverProbability, 0.9);
-		env.set(Param.finalCrossoverProbability, 0.6);
-		env.set(Param.initialMutationProbability, 0.5);
+		env.set(Param.finalCrossoverProbability, 0.7);
+		env.set(Param.initialMutationProbability, 0.7);
 		env.set(Param.finalMutationProbability, 0.9);
-		env.set(Param.populationSize, (env.getLambdaSmall() * env.getArea()));
-		env.set(Param.generationSize, 100);
+		env.set(Param.populationSize, 80);
+		env.set(Param.generationSize, 200);
 		env.set(Param.kElitism, 2);
 		env.set(Param.initialGeneRange, -10.0);
 		env.set(Param.finalGeneRange, 80.0);
-
-		//Experiment 01
-
+		
+		Engine e = new Engine(env);
+		
 		System.out.println("Experiment 01: No Bias");
 		System.out.println();
+		Result r1 = e.execUnifiedBias(0.0);
+		System.out.println(r1);
+		System.out.println();
 		
-		Scenario s = new Scenario(env);
-		s.initBias(0.0);
-		s.evaluation();
+		System.out.println("Experiment 02: Bias 10.0 dBm");
+		System.out.println();
+		Result r2 = e.execUnifiedBias(20.0);
+		System.out.println(r2);
+		System.out.println();
 		
+		System.out.println("Experiment 03: Bias 30.0 dBm");
+		System.out.println();
+		Result r3 = e.execUnifiedBias(30.0);
+		System.out.println(r3);
+		System.out.println();
 		
-	
-		Engine e = new Engine(s);
-		Result r = e.getGA();
+		System.out.println("Experiment 04: Bias 50.0 dBm");
+		System.out.println();
+		Result r4 = e.execUnifiedBias(50.0);
+		System.out.println(r4);
+		System.out.println();
 		
-		System.out.println(r.getSumRate());
-		System.out.println(r.getMedianRate());
+		System.out.println("Experiment 05: GA");
+		System.out.println();	
+		Result r5 = e.getGA();
+		System.out.println(r5);
+		System.out.println();
 		
-		
+		System.out.println("Experiment 06: GAOnOff");
+		System.out.println();	
+		Result r6 = e.getGAOnOff();
+		System.out.println(r6);
 	}
 }

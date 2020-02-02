@@ -16,11 +16,6 @@ public enum Param {
 	
 	nSubcarriers, nOFDMSymbols, subframeDuration, simulations,
 	
-	/* Static Bias Parameters */
-	
-	totalBias, biasStep, initialBias,
-	
-	
 	/* GA Parameters */
 	
 	initialCrossoverProbability, finalCrossoverProbability,

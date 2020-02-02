@@ -1,11 +1,8 @@
 package br.unifesspa.cre.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
-import br.unifesspa.cre.hetnet.Scenario;
-
-public class Result extends Entity implements Serializable, Comparable<Result>{
+public class Result implements Serializable, Comparable<Result>, Cloneable{
 
 	private static final long serialVersionUID = -8876078984426952757L;
 
@@ -23,26 +20,25 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	
 	private Double servingBSs;
 	
-	private Scenario scenario;
-	
 	private Double[] solution;
 
 	public Result() {
-		super();
-	}
-
-	public Result(Integer id) {
-		super(id);
+		this.bias = 0.0;
+		this.sumRate = 0.0;
+		this.medianRate = 0.0;
+		this.evaluation = 0.0;
+		this.requiredRate = 0.0;
+		this.uesServed = 0.0;
+		this.servingBSs = 0.0;
+		this.solution = null;
 	}
 
 	public Result(Integer id, Double bias, Double sumRate, Double medianRate, Double alpha, Double beta) {
-		super(id);
 		this.bias = bias;
 		this.sumRate = sumRate;
 		this.medianRate = medianRate;
 		this.requiredRate = 0.0;
 		this.uesServed = 0.0;
-		this.scenario = null;
 	}
 
 	public Double getSumRate() {
@@ -105,14 +101,6 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 		return serialVersionUID;
 	}
 
-	public Scenario getScenario() {
-		return scenario;
-	}
-
-	public void setScenario(Scenario scenario) {
-		this.scenario = scenario;
-	}
-
 	public Double[] getSolution() {
 		return solution;
 	}
@@ -125,7 +113,7 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 	public String toString() {
 		return "Result [bias=" + bias + ", sumRate=" + sumRate + ", medianRate=" + medianRate + ", evaluation="
 				+ evaluation + ", requiredRate=" + requiredRate + ", uesServed=" + uesServed + ", servingBSs="
-				+ servingBSs + ", scenario=" + scenario + ", solution=" + Arrays.toString(solution) + "]";
+				+ servingBSs +"]";
 	}
 
 	@Override
@@ -136,4 +124,18 @@ public class Result extends Entity implements Serializable, Comparable<Result>{
 				return 1;
 		else return -1;
 	}
+
+	@Override
+	public Object clone() {
+		// TODO Auto-generated method stub
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
 }

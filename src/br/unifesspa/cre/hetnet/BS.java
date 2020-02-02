@@ -1,6 +1,8 @@
 package br.unifesspa.cre.hetnet;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BS implements Serializable, Cloneable{
 
@@ -18,8 +20,12 @@ public class BS implements Serializable, Cloneable{
 	
 	private BSType type;
 	
-	private Double nRBs;
-
+	private Double allocatedRBs;
+	
+	private Boolean status;
+	
+	private List<NetworkElement> ues;
+	
 	public BS(BSType type, Point point, Double power, Double txGain, Double rxGain) {
 		super();
 		this.type = type;
@@ -27,7 +33,10 @@ public class BS implements Serializable, Cloneable{
 		this.power = power;
 		this.txGain = txGain;
 		this.rxGain = rxGain;
-		this.nRBs = 100.0;
+		this.allocatedRBs = 0.0;
+		this.ues = new ArrayList<NetworkElement>();
+		this.status = true;
+		this.load = 0.0;
 	}
 
 	public Point getPoint() {
@@ -78,28 +87,43 @@ public class BS implements Serializable, Cloneable{
 		this.type = type;
 	}
 
-	public Double getnRBs() {
-		return nRBs;
+	public Double getAllocatedRBs() {
+		return allocatedRBs;
 	}
 
-	public void setnRBs(Double nRBs) {
-		this.nRBs = nRBs;
+	public void setAllocatedRBs(Double allocatedRBs) {
+		this.allocatedRBs = allocatedRBs;
+	}
+
+	public List<NetworkElement> getUes() {
+		return ues;
+	}
+
+	public void setUes(List<NetworkElement> ues) {
+		this.ues = ues;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 	
-	@Override
-	public Object clone() {
-		try {
-			BS test = (BS) super.clone();
-			test.setPoint(new Point(this.point.getX(), this.point.getY(), this.point.getZ()));
-			return test;
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			return this;
-		}
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 	
+	@Override
+	protected Object clone(){
+		// TODO Auto-generated method stub
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

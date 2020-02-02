@@ -22,13 +22,13 @@ public class CREEnv implements Serializable, Cloneable{
 
 	private Double powerMacro = 46.0;
 
-	private Double powerSmall = 30.0;
+	private Double powerSmall = 23.0;
 
 	private Double bandwidth = 20.0;
 
 	private Double area = 100.0;
 
-	private Double noisePower = -176.0;
+	private Double noisePower = -174.0;
 
 	private Double heightMacro = 25.0;
 
@@ -91,8 +91,6 @@ public class CREEnv implements Serializable, Cloneable{
 
 		case generationSize: this.generationSize = value; break;
 
-		case totalBias: this.totalBias = value; break;
-
 		case nSubcarriers: this.nSubcarriers = value;  break;
 
 		case nOFDMSymbols: this.nOFDMSymbols = value; break;
@@ -142,15 +140,11 @@ public class CREEnv implements Serializable, Cloneable{
 
 		case finalMutationProbability: this.finalMutationProbability = value; break;
 
-		case biasStep: this.biasStep = value; break;
-
 		case gainMacro: this.gainMacro = value; break;
 
 		case gainSmall: this.gainSmall = value; break;
 
 		case subframeDuration: this.subframeDuration = value; break;
-
-		case initialBias: this.initialBias = value; break;
 
 		default: break;
 

@@ -53,7 +53,7 @@ public class Point implements Serializable, Cloneable{
 			return super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
-			return this;
+			return null;
 		}
 	}
 

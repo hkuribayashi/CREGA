@@ -6,37 +6,37 @@ import java.util.Comparator;
 import java.util.List;
 
 import br.unifesspa.cre.hetnet.Scenario;
+import br.unifesspa.cre.model.Result;
 
 public class GA{
 
-	private Scenario scenario;
+	protected Scenario scenario;
 
-	private Integer populationSize;
+	protected Integer populationSize;
 
-	private List<Individual> population;
+	protected List<Individual> population;
 
-	private Integer generationsSize;
-
-	private double bestSolution;
+	protected Integer generationsSize;
 	
-	private Individual bestIndividual;
+	protected Individual bestIndividual;
 	
-	private double[] crossoverProbability;
+	protected double[] crossoverProbability;
 	
-	private double[] mutationProbability;
+	protected double[] mutationProbability;
 
-	public GA(Scenario scenario) {
-
+	public GA(Scenario scenario, Boolean flag) {
 		this.scenario = scenario;
 		this.populationSize = this.scenario.getEnv().getPopulationSize();
 		this.generationsSize = this.scenario.getEnv().getGenerationSize();
 
 		this.population = new ArrayList<Individual>();
+		
 		for (int i=0; i<populationSize; i++)
-			this.population.add(new Individual(this.scenario.clone()));
+			this.population.add(new Individual(this.scenario.getEnv(), flag));
 
-		this.bestSolution = 0.0;
-		this.bestIndividual = null;
+		this.bestIndividual = new Individual(this.scenario.getEnv(), flag);
+		this.evaluateIndividual(this.bestIndividual);
+		this.scenario.reset();
 		
 		double bC = this.scenario.getEnv().getInitialCrossoverProbability();
 		double aC = (this.scenario.getEnv().getFinalCrossoverProbability() - bC)/this.generationsSize;
@@ -53,14 +53,23 @@ public class GA{
 		}
 	}
 
+	public void evaluateIndividual(Individual individual) {
+		this.scenario.setBias(individual.getChromossome());
+		this.scenario.evaluation();
+		Result r = this.scenario.getResult();
+		individual.setResult( (Result) r.clone() );
+	}
+
 	public Double evaluate() {
 		Double sum = 0.0;
 		int i=0;
 		while (i<this.population.size()) {
-			this.population.get(i).evaluateOnOff();
-			sum += this.population.get(i).getEvaluation();
+			this.evaluateIndividual(this.population.get(i));
+			sum += this.population.get(i).getResult().getEvaluation();
 			i++;
+			this.scenario.reset();
 		}
+		
 		Comparator<Individual> c = Collections.reverseOrder(); 
 		Collections.sort(this.population, c);
 		return sum;
@@ -68,7 +77,6 @@ public class GA{
 
 	public void evolve() {
 		int currentGeneration = 0;
-		double bestEvaluation = this.bestSolution;
 		int kElitismSize = this.scenario.getEnv().getkElitism();
 		List<Individual> kElitism = new ArrayList<Individual>();
 				
@@ -88,26 +96,25 @@ public class GA{
 			
 			newPopulation.addAll(kElitism);
 			this.setPopulation(newPopulation);
-			this.evaluate();
+			this.evaluate(); 
 			
-			if (bestEvaluation < this.getPopulation().get(0).getEvaluation()) {
-				
-				this.setBestSolution(this.getPopulation().get(0).getEvaluation());
+			if (this.getBestIndividual().getResult().getEvaluation() < this.getPopulation().get(0).getResult().getEvaluation()) {
 				this.setBestIndividual(this.getPopulation().get(0));
-				bestEvaluation = this.getBestSolution();
+				
+				this.evaluateIndividual(this.getBestIndividual());
 				
 				System.out.println("Generation: "+currentGeneration);
-				System.out.println("Solution: "+this.getBestIndividual().getEvaluation());
+				System.out.println("Solution: "+this.getBestIndividual().getResult().getEvaluation());
 				System.out.println("UEs served: "+this.getBestIndividual().getResult().getUesServed());
 				System.out.println("Serving BSs: "+this.getBestIndividual().getResult().getServingBSs());
 				System.out.println("Sum Rate: "+this.getBestIndividual().getResult().getSumRate());
 				System.out.println("Median Rate: "+this.getBestIndividual().getResult().getMedianRate());
-				System.out.println();
 				
+				this.scenario.debug();
+				this.scenario.reset();
 			}
 			currentGeneration++;
 		}
-
 	}
 
 	private void geneticOperators(int currentGeneration, Double sum, List<Individual> newPopulation) {
@@ -119,7 +126,7 @@ public class GA{
 			int f1 = this.roulette(sum);
 			int f2 = this.roulette(sum);
 			
-			while (f1 == f2) 
+			while (f1 == f2)
 				f2 = this.roulette(sum);
 			
 			Individual individual = null;
@@ -143,7 +150,7 @@ public class GA{
 		Double sum = 0.0;
 		int i = 0;
 		while (i < this.population.size() && sum < value) {
-			sum += this.population.get(i).getEvaluation();
+			sum += this.population.get(i).getResult().getEvaluation();
 			father += 1;
 			i += 1;
 		}
@@ -182,14 +189,6 @@ public class GA{
 		this.generationsSize = generationsSize;
 	}
 
-	public Double getBestSolution() {
-		return bestSolution;
-	}
-
-	public void setBestSolution(Double bestSolution) {
-		this.bestSolution = bestSolution;
-	}
-
 	public Individual getBestIndividual() {
 		return bestIndividual;
 	}
@@ -212,9 +211,5 @@ public class GA{
 
 	public void setMutationProbability(double[] mutationProbability) {
 		this.mutationProbability = mutationProbability;
-	}
-
-	public void setBestSolution(double bestSolution) {
-		this.bestSolution = bestSolution;
 	}
 }
