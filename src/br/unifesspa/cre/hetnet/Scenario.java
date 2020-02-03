@@ -49,6 +49,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		}
 
 		this.bias = new Double[smallPoints.size()];
+		
 		this.onOFF = new Double[smallPoints.size()];
 
 		this.ues = new ArrayList<UE>();
@@ -238,7 +239,7 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 				counter++;
 		}
 		this.result.setServingBSs(counter);
-		this.result.setEvaluation( this.result.getUesServed() );
+		this.result.setEvaluation( 2.0*this.result.getUesServed() - this.result.getServingBSs() );
 	}
 
 	public synchronized void paitTopology() {
@@ -282,6 +283,13 @@ public class Scenario implements Serializable, Cloneable, Runnable{
 		System.out.print("[  ");
 		for (BS b: this.allBS)
 			System.out.print(b.getLoad()+ "  ");
+		System.out.print("]");
+		System.out.println();
+		
+		System.out.println("[DEBUG]: Status");
+		System.out.print("[  ");
+		for (BS b: this.allBS)
+			System.out.print(b.getStatus()+ "  ");
 		System.out.print("]");
 		System.out.println();
 

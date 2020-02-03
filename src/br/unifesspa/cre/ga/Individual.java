@@ -28,7 +28,7 @@ public class Individual implements Cloneable, Comparable<Individual>{
 		double lowerBound = env.getInitialGeneRange();
 		double upperBound = env.getFinalGeneRange();
 
-		int chromossomeSize = 20;
+		int chromossomeSize = 25;
 
 		this.chromossome = new Double[chromossomeSize];
 		this.booleanChromossome = new Double[chromossomeSize];

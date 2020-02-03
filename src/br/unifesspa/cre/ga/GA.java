@@ -23,9 +23,12 @@ public class GA{
 	protected double[] crossoverProbability;
 	
 	protected double[] mutationProbability;
+	
+	protected Boolean flag;
 
 	public GA(Scenario scenario, Boolean flag) {
 		this.scenario = scenario;
+		this.flag = flag;
 		this.populationSize = this.scenario.getEnv().getPopulationSize();
 		this.generationsSize = this.scenario.getEnv().getGenerationSize();
 
@@ -55,6 +58,8 @@ public class GA{
 
 	public void evaluateIndividual(Individual individual) {
 		this.scenario.setBias(individual.getChromossome());
+		if (this.flag)
+			this.scenario.setOnOFF(individual.getBooleanChromossome());
 		this.scenario.evaluation();
 		Result r = this.scenario.getResult();
 		individual.setResult( (Result) r.clone() );

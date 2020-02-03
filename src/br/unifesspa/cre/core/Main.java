@@ -16,7 +16,7 @@ public class Main {
 
 		//Setting general simulations parameters
 		env.set(Param.area, 1000000.0); 	   // 1 km^2
-		env.set(Param.lambdaFemto, 0.00002);   // 0.00002 Femto/m^2 = 20 Femtos  
+		env.set(Param.lambdaFemto, 0.000025);   // 0.000025 Femto/m^2 = 25 Femtos  
 		env.set(Param.lambdaUser, 0.0003);     // 0.0003 Users/m^2 = 300 Users 
 		env.set(Param.lambdaMacro, 0.000002);  // 0.000002 Macros/m^2 = 2 Macros
 		env.set(Param.powerMacro, 46.0);	   // dBm
@@ -36,7 +36,7 @@ public class Main {
 		env.set(Param.initialMutationProbability, 0.7);
 		env.set(Param.finalMutationProbability, 0.9);
 		env.set(Param.populationSize, 80);
-		env.set(Param.generationSize, 200);
+		env.set(Param.generationSize, 100);
 		env.set(Param.kElitism, 2);
 		env.set(Param.initialGeneRange, -10.0);
 		env.set(Param.finalGeneRange, 80.0);
@@ -67,15 +67,17 @@ public class Main {
 		System.out.println(r4);
 		System.out.println();
 		
+		System.out.println("Experiment 06: GAOnOff");
+		System.out.println();	
+		Result r6 = e.getGAOnOff();
+		System.out.println(r6);
+		
 		System.out.println("Experiment 05: GA");
 		System.out.println();	
 		Result r5 = e.getGA();
 		System.out.println(r5);
 		System.out.println();
 		
-		System.out.println("Experiment 06: GAOnOff");
-		System.out.println();	
-		Result r6 = e.getGAOnOff();
-		System.out.println(r6);
+		
 	}
 }
