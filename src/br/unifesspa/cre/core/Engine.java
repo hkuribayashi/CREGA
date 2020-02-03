@@ -2,7 +2,6 @@ package br.unifesspa.cre.core;
 
 import br.unifesspa.cre.config.CREEnv;
 import br.unifesspa.cre.ga.GA;
-import br.unifesspa.cre.hetnet.BS;
 import br.unifesspa.cre.hetnet.HetNet;
 import br.unifesspa.cre.hetnet.Scenario;
 import br.unifesspa.cre.model.Result;
@@ -56,19 +55,8 @@ public class Engine{
 		this.scenario.setOnOffFlag(true);
 		GA ga = new GA(this.scenario, true);
 		ga.evolve();
-		
-		for(BS b: this.scenario.getAllBS()){
-			if (b.getLoad().equals(0.0)) {
-				System.out.println("AQUI");
-				b.setStatus(false);
-			}
-		}
-		
-		this.scenario.evaluation();
-		Result r = (Result) this.scenario.getResult().clone();
-		
 		this.scenario.reset();
-		return r;
+		return ga.getBestIndividual().getResult();
 	}
 	
 	public Double[] getBiasOffset() {
